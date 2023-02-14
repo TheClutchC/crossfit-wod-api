@@ -1,4 +1,5 @@
-const Workout = require('../database/Workout')
+const { v4: uuid } = require('uuid');
+const Workout = require('../database/Workout');
 
 /*---------------- /api/v1/workouts -----------------*/
 
@@ -7,8 +8,15 @@ const Workout = require('../database/Workout')
     return allWorkouts;
   };
   
-  const createNewWorkout = () => {
-    return;
+  const createNewWorkout = (newWorkout) => {
+    const workoutToInsert = {
+      ...newWorkout,
+      id: uuid(),
+      createdAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
+      updatedAt: new Date().toLocaleString("en-US", { timeZone: "UTC" })
+    };
+    const createdWorkout = Workout.createNewWorkout(workoutToInsert);
+    return createdWorkout;
   };
 
   /*---------------- /api/v1/workouts/:workoutId -----------------*/
@@ -27,8 +35,8 @@ const Workout = require('../database/Workout')
   
   module.exports = {
     getAllWorkouts,
-    getOneWorkout,
     createNewWorkout,
+    getOneWorkout,
     updateOneWorkout,
     deleteOneWorkout,
   };
