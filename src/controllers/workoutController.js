@@ -17,6 +17,15 @@ const getAllWorkouts = (req, res) => {
       !body.exercises ||
       !body.trainerTips
     ) {
+      res
+        .status(400)
+        .send({
+          status: "FAILED",
+          data: {
+            error:
+              " One of the following is missing or is empty in request body: 'name', 'mode', 'equipment', 'exercises', 'trainerTips' ",
+          },
+        });
       return;
     }
 
@@ -27,26 +36,51 @@ const getAllWorkouts = (req, res) => {
       exercises: body.exercises,
       trainerTips: body.trainerTips,
     };
-    const createdWorkout = workoutService.createNewWorkout(newWorkout);
-    res.status(201).send({ status: "OK", data:createdWorkout });
+    try {
+      const createdWorkout = workoutService.createNewWorkout(newWorkout);
+      res.status(201).send({ status: "OK", data:createdWorkout });
+    } catch (error) {
+      res
+        .status(error?.status || 500)
+        .send({ status: "FAILED", data: { error: error?.message || error } });
+    }
   };
 
-  /*---------------- /api/v1/workouts/:workoutId -----------------*/
+/*---------------- /api/v1/workouts/:workoutId -----------------*/
 
   const getOneWorkout = (req, res) => {
-    const workout = workoutService.getOneWorkout();
-    res.send("Get an existing workout");
+    const {
+      params: { workoutId },
+    } = req;
+    if (!workoutId) {
+      return;
+    }
+    const workout = workoutService.getOneWorkout(workoutId);
+    res.send({ status: "OK", data: workout });
   };
   
   
   const updateOneWorkout = (req, res) => {
-    const updatedWorkout = workoutService.updateOneWorkout();
-    res.send("Update an existing workout");
+    const {
+      body,
+      params: { workoutId },
+    } = req;
+    if (!workoutId) {
+      return;
+    }
+    const updatedWorkout = workoutService.updateOneWorkout(workoutId, body);
+    res.send({ status: "OK", data: updatedWorkout });
   };
   
   const deleteOneWorkout = (req, res) => {
-    workoutService.deleteOneWorkout();
-    res.send("Delete an existing workout");
+    const {
+      params: { workoutId }
+    } = req;
+    if (!workoutId) {
+      return;
+    }
+    workoutService.deleteOneWorkout(workoutId);
+    res.status(204).send({ status: "OK" });
   };
   
   module.exports = {

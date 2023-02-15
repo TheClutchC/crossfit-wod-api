@@ -15,22 +15,28 @@ const Workout = require('../database/Workout');
       createdAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
       updatedAt: new Date().toLocaleString("en-US", { timeZone: "UTC" })
     };
-    const createdWorkout = Workout.createNewWorkout(workoutToInsert);
-    return createdWorkout;
+    try {
+      const createdWorkout = Workout.createNewWorkout(workoutToInsert);
+      return createdWorkout;
+    } catch (error) {
+      throw error;
+    }
   };
 
-  /*---------------- /api/v1/workouts/:workoutId -----------------*/
+/*---------------- /api/v1/workouts/:workoutId -----------------*/
   
-  const getOneWorkout = () => {
-    return;
+  const getOneWorkout = (workoutId) => {
+    const workout = Workout.getOneWorkout(workoutId);
+    return workout;
   };
   
-  const updateOneWorkout = () => {
-    return;
+  const updateOneWorkout = (workoutId, changes) => {
+    const updatedWorkout = Workout.updateOneWorkout(workoutId, changes);
+    return updatedWorkout;
   };
   
-  const deleteOneWorkout = () => {
-    return;
+  const deleteOneWorkout = (workoutId) => {
+    Workout.deleteOneWorkout(workoutId);
   };
   
   module.exports = {
