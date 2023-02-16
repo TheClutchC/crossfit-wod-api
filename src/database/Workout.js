@@ -3,9 +3,15 @@ const { saveToDatabase } = require("./utils");
 
 /*---------------- /api/v1/workouts -----------------*/
 
-const getAllWorkouts = () => {
+const getAllWorkouts = (filterParams) => {
   try {
-    return DB.workouts;
+    let workouts = DB.workouts;
+    if (filterParams.mode) {
+      return DB.workouts.filter((workout) =>
+        workout.mode.toLowerCase().includes(filterParams.mode)
+      );
+    }
+    return workouts;
   } catch (error) {
     throw { status: 500, message: error };
   }

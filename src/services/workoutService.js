@@ -3,9 +3,9 @@ const Workout = require('../database/Workout');
 
 /*---------------- /api/v1/workouts -----------------*/
 
-const getAllWorkouts = () => {
+const getAllWorkouts = (filterParams) => {
   try {
-    const allWorkouts = Workout.getAllWorkouts();
+    const allWorkouts = Workout.getAllWorkouts(filterParams);
     return allWorkouts;
   } catch (error) {
     throw error;
